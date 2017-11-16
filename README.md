@@ -22,8 +22,17 @@ rvm reload
 rvm install 2.1.0
 ruby --version  #To check your current default interpreter, run the following:
 gem install net-ping
+```
+###### Installing script
+Without git:
+```bash
 mkdir etc/packet_loss_logger && cd $_
 culr -O https://raw.githubusercontent.com/bestwebua/MyRubyFirstSteps/master/my/packet_loss_logger/pll.rb
+```
+Using git:
+```bash
+cd etc
+git clone https://github.com/bestwebua/packet-loss-logger
 ```
 - - -
 ##### Running ICMP Packet Loss Logger
