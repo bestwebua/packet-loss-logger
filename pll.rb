@@ -54,6 +54,7 @@ require 'net/ping'
         sleep 1
       break if time_current >= time_end
     end
-  
-  File.open(log, 'a+') { |data| data.puts "#### Ping to [#{host}], started at: #{time_start}, finished at: #{time_end}. Total timeouts: #{total_fails}. The worst time is #{the_worst_time} ms. ####" }
-puts "#{IO.readlines(log).last[0..-2]}"
+    
+    File.open(log, 'a+') { |data| data.puts "#### Ping to [#{host}], started at: #{time_start}, finished at: #{time_end}. Total timeouts: #{total_fails}. The worst time is #{the_worst_time} ms. ####" }
+  puts "#{IO.readlines(log).last[0..-2]}"
+puts "For more details see the log: #{File.expand_path(log, __FILE__)}"
