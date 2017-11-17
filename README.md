@@ -20,7 +20,7 @@ curl -L get.rvm.io | bash -s stable
 source /etc/profile.d/rvm.sh
 rvm reload
 rvm install 2.1.0
-ruby --version  #To check your current default interpreter, run the following:
+ruby --version  #checkout your current default ruby interpreter
 gem install net-ping
 ```
 ###### Installing script
