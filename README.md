@@ -26,12 +26,12 @@ gem install net-ping
 ###### Installing script
 Without git:
 ```bash
-mkdir etc/packet_loss_logger && cd $_
-culr -O https://raw.githubusercontent.com/bestwebua/MyRubyFirstSteps/master/my/packet_loss_logger/pll.rb
+mkdir etc/packet-loss-logger && cd $_
+culr -O https://raw.githubusercontent.com/bestwebua/packet-loss-logger/master/pll.rb
 ```
 Using git:
 ```bash
-cd etc
+cd /etc
 git clone https://github.com/bestwebua/packet-loss-logger
 ```
 - - -
@@ -42,7 +42,7 @@ $ screen -S pll
 ```
 To start the script, run pll.rb with next pattern: `[host_name] [packet_size_in_bytes] [runtime format: 1s, 1m , 1h or 1d]`
 ```bash
-$ ruby etc/packet_loss_logger/pll.rb google.com 1000 1m
+$ ruby /etc/packet-loss-logger/pll.rb google.com 1000 1m
 ```
 - - -
 ##### How to use the screen?
@@ -62,6 +62,6 @@ When you no longer need a screen session, you can kill it. To do this, login int
 - - -
 ##### Reading the ICMP Packet Loss Log
 ```bash
-$ cat etc/packet_loss_logger/log.txt
+$ cat /etc/packet-loss-logger/log.txt
 ```
 - - -
