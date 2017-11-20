@@ -26,7 +26,7 @@ gem install net-ping
 ###### Installing script
 Without git:
 ```bash
-mkdir etc/packet-loss-logger && cd $_
+mkdir /etc/packet-loss-logger && cd $_
 culr -O https://raw.githubusercontent.com/bestwebua/packet-loss-logger/master/pll.rb
 ```
 Using git:
