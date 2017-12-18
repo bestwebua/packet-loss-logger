@@ -7,7 +7,7 @@ Simple packet loss logger build with using net/ping gem.
 I have found the main idea for writing this script when I
 needed to log loss packets on CentOS 6.5 server.
 
-I tried to use in bash ping (from iputils), like this code:
+I tried to use in bash ping (from iputils) code like this:
 # ping -D -O -s 1000 myhost | grep 'no answer', but ping from
 iputils(20071127-24) on CentsOS doesn't know O-key(.
 
