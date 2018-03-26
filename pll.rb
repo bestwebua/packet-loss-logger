@@ -16,6 +16,7 @@ like example below:
 
 # sudo ruby pll.rb host.com 1000 20s
 =end
+
 require_relative 'packet_loss_logger'
 
 logger = PacketLossLogger.new

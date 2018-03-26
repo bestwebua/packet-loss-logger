@@ -1,45 +1,50 @@
-require 'net/ping'
+require 'net/ping/icmp'
 
 class PacketLossLogger
 
-  attr_reader :host, :packet_size, :time_end
+  attr_reader :host, :packet_size, :runtime, :time_end, :the_worst_time, :total_fails, :log
 
   def run(params)
     error = 'Wrong format! pll.rb [host_name] [packet_size_in_bytes] [runtime format: 1s, 1m , 1h or 1d]'
-    raise error if params_not_valid?(params)
-    set_logger_settings(params)
-    set_ping_settings
+    raise error unless params_valid?(params)
+
+    set_logger_settings(params, runtime_calculation(params))
+    set_ping_settings(@host, @packet_size)
     set_save_settings
     ping_log_inform
-    save_results
-    inform
+    save_results(@log)
+    informer(@log)
   end
 
-  def params_not_valid?(params)
-    !(params.join(' ') =~ /\A([a-z0-9_-]+\.[a-z]+) +(\d+) +(\d+[s|m|h|d])\z/)
+  def params_valid?(params)
+    params.is_a?(Array) && !!(params.join(' ') =~ /\A([a-z0-9_-]+\.[a-z]+) +(\d+) +(\d+[s|m|h|d])\z/)
   end
 
-  def set_logger_settings(params)
-    @host, packet_size, runtime = params
-    @packet_size = packet_size.to_i
+  def runtime_calculation(params)
+    runtime = params[-1]
       runtime_duration = runtime[0..-2].to_i
-      runtime_units = runtime[-1]
-      runtime_units = case runtime_units
-                        when 'm' then 60
-                        when 'h' then 3600
-                        when 'd' then 86400
-                        else 1
-                      end
-      runtime = runtime_duration*runtime_units
+        runtime_units = runtime[-1]
+          runtime_units = case runtime_units
+                            when 'm' then 60
+                            when 'h' then 3600
+                            when 'd' then 86400
+                            else 1
+                          end
+    runtime_duration*runtime_units
+  end
+
+  def set_logger_settings(params, runtime)
+    @host, @packet_size, @runtime = params[0], params[1].to_i, runtime
       @time_start = Time.now
-      @time_end = @time_start+runtime
-      @the_worst_time = @total_fails = 0
+      @time_end = @time_start+@runtime
+    @the_worst_time = @total_fails = 0
     self
   end
 
-  def set_ping_settings
-    @icmp = Net::Ping::ICMP.new(@host)
-    @icmp.data_size = @packet_size
+  def set_ping_settings(host, packet_size)
+    @icmp = Net::Ping::ICMP.new(host)
+      @icmp.data_size = packet_size
+    @icmp.class
   end
 
   def set_save_settings
@@ -47,7 +52,7 @@ class PacketLossLogger
     @log = File.new("#{location}/log.txt", 'a+')
   end
 
-  def ping_log_inform
+  def ping_log_inform #need to refactor
     loop do
       time_current = Time.now
         if @icmp.ping
@@ -63,13 +68,15 @@ class PacketLossLogger
     end
   end
 
-  def save_results
-    File.open(@log, 'a+') { |data| data.puts "#### Ping to [#{@host}], started at: #{@time_start}, finished at: #{@time_end}. Total timeouts: #{@total_fails}. The worst time is #{@the_worst_time} ms. ####" }
+  def save_results(log)
+    File.open(log, 'a+') { |data| data.puts "#### Ping to [#{@host}], started at: #{@time_start}, finished at: #{@time_end}. Total timeouts: #{@total_fails}. The worst time is #{@the_worst_time} ms. ####" }
+    !File.zero?(log)
   end
 
-  def inform
-    puts "#{IO.readlines(@log).last[0..-2]}"
-    puts "For more details see the log: #{File.expand_path(@log, __FILE__)}"
+  def informer(log)
+    return false if File.zero?(log)
+    puts "#{IO.readlines(log).last[0..-2]}"
+    puts "For more details see the log: #{File.expand_path(log, __FILE__)}"
   end
 
 end
