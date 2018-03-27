@@ -28,6 +28,7 @@ Without git:
 ```bash
 mkdir /etc/packet-loss-logger && cd $_
 culr -O https://raw.githubusercontent.com/bestwebua/packet-loss-logger/master/pll.rb
+culr -O https://raw.githubusercontent.com/bestwebua/packet-loss-logger/master/packet_loss_logger.rb
 ```
 Using git:
 ```bash
