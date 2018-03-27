@@ -2,7 +2,7 @@ require 'net/ping/icmp'
 
 class PacketLossLogger
 
-  attr_reader :host, :packet_size, :runtime, :time_end, :the_worst_time, :total_fails, :log
+  attr_reader :host, :packet_size, :runtime, :time_end, :the_worst_time, :total_fails, :icmp, :log
 
   def run(params)
     error = 'Wrong format! pll.rb [host_name] [packet_size_in_bytes] [runtime format: 1s, 1m , 1h or 1d]'
@@ -11,7 +11,7 @@ class PacketLossLogger
     set_logger_settings(params, runtime_calculation(params))
     set_ping_settings(@host, @packet_size)
     set_save_settings
-    ping_log_inform
+    ping_log_inform(@icmp, @host, @time_end, @log)
     save_results(@log)
     informer(@log)
   end
@@ -52,19 +52,19 @@ class PacketLossLogger
     @log = File.new("#{location}/log.txt", 'a+')
   end
 
-  def ping_log_inform #need to refactor
+  def ping_log_inform(icmp, host, time_end, log)
     loop do
       time_current = Time.now
-        if @icmp.ping
-          duration = (@icmp.duration*1000).round(1)
-            puts "[#{@host}] replied in #{duration} ms"
+        if icmp.ping
+          duration = (icmp.duration*1000).round(1)
+            puts "[#{host}] replied in #{duration} ms"
           @the_worst_time = duration if duration > @the_worst_time
         else
-          File.open(@log, 'a+') { |data| data.puts "#{time_current} request timeout with [#{host}]" }
+          File.open(log, 'a+') { |data| data.puts "#{time_current} request timeout with [#{host}]" }
           @total_fails += 1
         end
         sleep 1
-      break if time_current >= @time_end
+      break if time_current >= time_end
     end
   end
 

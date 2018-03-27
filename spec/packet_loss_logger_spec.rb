@@ -66,14 +66,14 @@ describe PacketLossLogger do
       it 'just puts if ping return true' do
         logger.set_logger_settings(['localhost', '1000'], 1)
         logger.set_ping_settings(logger.host, logger.packet_size)
-        logger.ping_log_inform
+        logger.ping_log_inform(logger.icmp, logger.host, logger.time_end, logger.log)
         expect(logger.the_worst_time).to be > 0
       end
 
       it 'counting of fails and immediate save to the log if ping return false' do
         logger.set_logger_settings(['fakehost', '1000'], 1)
         logger.set_ping_settings(logger.host, logger.packet_size)
-        logger.ping_log_inform
+        logger.ping_log_inform(logger.icmp, logger.host, logger.time_end, logger.log)
         (expect(logger.total_fails).to be > 0) && (expect(!File.zero?(logger.log)).to eq(true))
         File.delete(logger.log)
       end
