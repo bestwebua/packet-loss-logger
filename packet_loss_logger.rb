@@ -75,7 +75,7 @@ class PacketLossLogger
 
   def informer(log)
     return false if File.zero?(log)
-    puts IO.readlines(log).last[0..-2].to_s
+    puts IO.readlines(log).last[0..-2]
     puts "#{message[2]} #{File.expand_path(log, __FILE__)}"
   end
 
