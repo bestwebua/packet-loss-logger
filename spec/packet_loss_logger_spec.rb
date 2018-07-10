@@ -4,7 +4,6 @@
 require_relative '../packet_loss_logger'
 
 describe PacketLossLogger do
-
   it 'instance of class PacketLossLogger' do
     expect(subject).to be_an_instance_of(PacketLossLogger)
   end
@@ -63,20 +62,28 @@ describe PacketLossLogger do
     logger = PacketLossLogger.new
     logger.set_save_settings
 
-      it 'just puts if ping return true' do
+    context 'just puts if ping return true' do
+      before do
         logger.set_logger_settings(['localhost', '1000'], 1)
         logger.set_ping_settings(logger.host, logger.packet_size)
         logger.ping_log_inform(logger.icmp, logger.host, logger.time_end, logger.log)
-        expect(logger.the_worst_time).to be > 0
       end
 
-      it 'counting of fails and immediate save to the log if ping return false' do
+      specify { expect(logger.the_worst_time).to be > 0 }
+    end
+
+    context 'counting of fails and immediate save to the log if ping return false' do
+      before do
         logger.set_logger_settings(['fakehost', '1000'], 1)
         logger.set_ping_settings(logger.host, logger.packet_size)
         logger.ping_log_inform(logger.icmp, logger.host, logger.time_end, logger.log)
-        (expect(logger.total_fails).to be > 0) && (expect(!File.zero?(logger.log)).to eq(true))
-        File.delete(logger.log)
       end
+      after { File.delete(logger.log) }
+
+      specify do
+        (expect(logger.total_fails).to be > 0) && (expect(!File.zero?(logger.log)).to eq(true))
+      end
+    end
   end
 
   describe '#save_results' do
@@ -94,5 +101,4 @@ describe PacketLossLogger do
     expect(subject.informer(file)).to eq(false)
     File.delete(file)
   end
-
 end

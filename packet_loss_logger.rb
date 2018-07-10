@@ -80,7 +80,7 @@ class PacketLossLogger
   end
 
   def message
-    ['Wrong format! pll.rb [host_name] [packet_size_in_bytes] [runtime format: 1s, 1m , 1h or 1d]',
+    ['Wrong format! pll.rb [host_name] [packet_size_in_bytes] [runtime format: 1s, 1m, 1h or 1d]',
       "#### Ping to [#{@host}], started at: #{@time_start}, finished at: #{@time_end}. Total timeouts: #{total_fails}. The worst time is #{the_worst_time} ms. ####",
       'For more details see the log:']
   end
